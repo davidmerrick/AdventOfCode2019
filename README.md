@@ -14,6 +14,8 @@ One gotcha I found is that the language needs to be specified for code coverage 
  java -jar codacy-coverage-reporter-assembly.jar report -l Kotlin -r build/reports/jacoco/test/jacocoTestReport.xml
 ```
 
+Configuring [engines](https://support.codacy.com/hc/en-us/articles/213632009-Engines).
+
 # Helpful resources
 
   - [IntCode Disassembler](https://janiczek.github.io/advent-of-code/Year2019/Intcode/Disasm/)
