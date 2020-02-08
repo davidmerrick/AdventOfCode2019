@@ -45,17 +45,6 @@ tasks {
         }
     }
 
-    jacocoTestCoverageVerification {
-        mustRunAfter(jacocoTestReport)
-        violationRules {
-            rule {
-                limit {
-                    minimum = "0.9".toBigDecimal()
-                }
-            }
-        }
-    }
-
     compileKotlin {
         kotlinOptions {
             jvmTarget = "1.8"
