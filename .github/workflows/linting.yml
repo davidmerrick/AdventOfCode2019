@@ -9,6 +9,8 @@ jobs:
     name: Build and test
     steps:
       - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
       - name: ktlint
         uses: ScaCap/action-ktlint@master
         with:
