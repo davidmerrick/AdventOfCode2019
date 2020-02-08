@@ -1,3 +1,5 @@
+name: Code Coverage Reporting
+
 on:
   pull_request:
   push:
