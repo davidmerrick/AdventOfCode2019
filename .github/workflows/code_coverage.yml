@@ -1,0 +1,35 @@
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_test:
+    env:
+      CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+    runs-on: ubuntu-latest
+    container: openjdk:11.0.1-jdk-slim-stretch
+    name: Build and test
+    steps:
+      - name: Set Git branch and SHA for Code Climate
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]
+          then
+            echo ::set-env name=GIT_BRANCH::${{ github.head_ref }}
+            echo ::set-env name=GIT_COMMIT_SHA::${{ github.event.pull_request.head.sha }}
+          else
+            echo ::set-env name=GIT_BRANCH::$(echo $GITHUB_REF | cut -c12-)
+            echo ::set-env name=GIT_COMMIT_SHA::$GITHUB_SHA
+          fi
+      - uses: actions/checkout@v1
+      - name: Test
+        run: ./gradlew test
+      - name: Jacoco reports
+        run: ./gradlew testCoverage
+      - name: Upload test results to Codacy
+        run: |
+          apt-get update && apt-get install -y curl jq
+          curl -LS -o codacy-coverage-reporter-assembly.jar "$(curl -LSs https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | endswith(".jar"))) | .[0].browser_download_url')"
+          java -jar codacy-coverage-reporter-assembly.jar report -l Kotlin -r build/reports/jacoco/test/jacocoTestReport.xml --commit-uuid $GIT_COMMIT_SHA
+
