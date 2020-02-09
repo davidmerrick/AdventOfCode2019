@@ -3,7 +3,6 @@ package com.merricklabs.adventofcode2019.day6
 import io.kotlintest.shouldBe
 import org.testng.annotations.Test
 
-
 /**
  * I implemented the orbit count as a tree.
  * The total number of orbits is the total distance

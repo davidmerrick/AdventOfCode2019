@@ -1,13 +1,14 @@
 package com.merricklabs.adventofcode2019.day5
 
-import com.merricklabs.adventofcode2019.day5.OpCode.*
+import com.merricklabs.adventofcode2019.day5.OpCode.ADD
+import com.merricklabs.adventofcode2019.day5.OpCode.MULT
 import io.kotlintest.shouldBe
 import org.testng.annotations.Test
 
 class InstructionHeaderTest {
 
     @Test
-    fun `Parse example`(){
+    fun `Parse example`() {
         val header = InstructionHeader(1002)
         header.opCode shouldBe MULT
         header.numParams shouldBe 3
@@ -17,7 +18,7 @@ class InstructionHeaderTest {
     }
 
     @Test
-    fun `Left-pad instructions`(){
+    fun `Left-pad instructions`() {
         val header = InstructionHeader(101)
         header.opCode shouldBe ADD
         header.paramModes.size shouldBe 3

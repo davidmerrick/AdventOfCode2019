@@ -26,11 +26,11 @@ object IntcodeComputerTest {
     @Test
     fun `Get result at position 0`() {
         val program = this::class.java.getResourceAsStream("input.txt")
-                .bufferedReader()
-                .readText()
-                .split(",")
-                .map { it.toInt() }
-                .toMutableList()
+            .bufferedReader()
+            .readText()
+            .split(",")
+            .map { it.toInt() }
+            .toMutableList()
         val computer = IntcodeComputer(program)
         val result = computer.compute()
         println(result[0])
@@ -43,23 +43,23 @@ object IntcodeComputerTest {
         val desiredResult = 19690720
 
         val initialProgram = this::class.java.getResourceAsStream("input.txt")
-                .bufferedReader()
-                .readText()
-                .split(",")
-                .map { it.toInt() }
+            .bufferedReader()
+            .readText()
+            .split(",")
+            .map { it.toInt() }
 
         var noun = 0
         var verb = 0
         var found = false
         val range = initialProgram.indices
-        outerLoop@ for (i in range){
-            for(j in range){
+        outerLoop@ for (i in range) {
+            for (j in range) {
                 val program = initialProgram.toMutableList()
                 program[1] = i
                 program[2] = j
                 val computer = IntcodeComputer(program)
                 val result = computer.compute()
-                if(result[0] == desiredResult){
+                if (result[0] == desiredResult) {
                     found = true
                     noun = i
                     verb = j
@@ -68,11 +68,10 @@ object IntcodeComputerTest {
             }
         }
 
-        if(found){
+        if (found) {
             println("Found answer: ${100 * noun + verb}")
         } else {
             println("No answer found")
         }
     }
 }
-

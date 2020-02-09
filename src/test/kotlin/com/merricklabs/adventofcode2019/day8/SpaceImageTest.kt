@@ -19,8 +19,8 @@ class SpaceImageTest {
     @Test
     fun `Test with my input`() {
         val digits = this::class.java.getResourceAsStream("input.txt")
-                .bufferedReader()
-                .readText()
+            .bufferedReader()
+            .readText()
         val image = SpaceImage(digits, 25, 6)
         val layers = image.layers
         val layer = layers.minBy { layer -> layer.count { it == 0 } }!!
@@ -46,8 +46,8 @@ class SpaceImageTest {
         val width = 25
         val height = 6
         val digits = this::class.java.getResourceAsStream("input.txt")
-                .bufferedReader()
-                .readText()
+            .bufferedReader()
+            .readText()
         val image = SpaceImage(digits, width, height)
         image.render().chunked(width).forEach { println(it) }
 
