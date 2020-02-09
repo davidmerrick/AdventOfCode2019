@@ -14,7 +14,9 @@ jobs:
           apt-get update && apt-get -y install curl
       - name: Install ktlint
         run: |
-          curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.35.0/ktlint && chmod a+x ktlint
+          curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.35.0/ktlint
+          chmod a+x ktlint
+          mv ktlint /bin
       - name: Install reviewdog
         run: |
           curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s
