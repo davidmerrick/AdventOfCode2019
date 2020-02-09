@@ -1,13 +1,12 @@
-name: Code Coverage Reporting
+name: Push to master
 
 on:
-  pull_request:
   push:
     branches:
       - master
 
 jobs:
-  build_and_test:
+  report_code_coverage:
     env:
       CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
     runs-on: ubuntu-latest
