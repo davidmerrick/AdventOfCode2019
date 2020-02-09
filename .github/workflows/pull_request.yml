@@ -1,16 +1,55 @@
-name: Pull Request Actions
+name: PR Checks
 
 on: [pull_request]
 
 jobs:
   build_and_test:
-    env:
-      CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
     runs-on: ubuntu-latest
     container: openjdk:11.0.1-jdk-slim-stretch
     name: Build and test
     steps:
-      - name: Set Git branch and SHA for Code Climate
+      - uses: actions/checkout@v1
+      - name: Test
+        run: ./gradlew test
+      - name: Persist workspace
+        uses: actions/upload-artifact@master
+        with:
+          name: workspace
+          path: ./
+  jacoco:
+    runs-on: ubuntu-latest
+    container: openjdk:11.0.1-jdk-slim-stretch
+    needs: build_and_test
+    steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: workspace
+          path: ./
+      - name: Jacoco reports
+        run: ./gradlew testCoverage
+      - name: Persist test results
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: jacoco
+          path: ./build/jacocoHtml
+      - name: Persist workspace
+        uses: actions/upload-artifact@master
+        with:
+          name: workspace
+          path: ./
+  upload_coverage:
+    runs-on: ubuntu-latest
+    container: openjdk:11.0.1-jdk-slim-stretch
+    needs: jacoco
+    env:
+      CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+    steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: workspace
+          path: ./
+      - name: Set Git branch and SHA for Codacy
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]
           then
@@ -20,27 +59,6 @@ jobs:
             echo ::set-env name=GIT_BRANCH::$(echo $GITHUB_REF | cut -c12-)
             echo ::set-env name=GIT_COMMIT_SHA::$GITHUB_SHA
           fi
-      - uses: actions/checkout@v1
-      - name: Test
-        run: ./gradlew test
-  jacoco:
-    runs-on: ubuntu-latest
-    container: openjdk:11.0.1-jdk-slim-stretch
-    needs: build_and_test
-    steps:
-      - name: Jacoco reports
-        run: ./gradlew testCoverage
-      - name: Persist test results
-        if: always()
-        uses: actions/upload-artifact@v1
-        with:
-          name: jacoco
-          path: ./build/jacocoHtml
-  upload_coverage:
-    runs-on: ubuntu-latest
-    container: openjdk:11.0.1-jdk-slim-stretch
-    needs: jacoco
-    steps:
       - name: Upload test results to Codacy
         run: |
           apt-get update && apt-get install -y curl jq
@@ -51,6 +69,10 @@ jobs:
     container: openjdk:11.0.1-jdk-slim-stretch
     needs: jacoco
     steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: workspace
+          path: ./
       - run: ./gradlew jacocoTestCoverageVerification
   ktlint:
     runs-on: ubuntu-latest
