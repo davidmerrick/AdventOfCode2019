@@ -3,7 +3,7 @@ name: Pull Request Actions
 on: [pull_request]
 
 jobs:
-  report_code_coverage:
+  build_and_test:
     env:
       CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
     runs-on: ubuntu-latest
@@ -23,17 +23,38 @@ jobs:
       - uses: actions/checkout@v1
       - name: Test
         run: ./gradlew test
+  jacoco:
+    runs-on: ubuntu-latest
+    container: openjdk:11.0.1-jdk-slim-stretch
+    needs: build_and_test
+    steps:
       - name: Jacoco reports
         run: ./gradlew testCoverage
+      - name: Persist test results
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: jacoco
+          path: ./build/jacocoHtml
+  upload_coverage:
+    runs-on: ubuntu-latest
+    container: openjdk:11.0.1-jdk-slim-stretch
+    needs: jacoco
+    steps:
       - name: Upload test results to Codacy
         run: |
           apt-get update && apt-get install -y curl jq
           curl -LS -o codacy-coverage-reporter-assembly.jar "$(curl -LSs https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | endswith(".jar"))) | .[0].browser_download_url')"
           java -jar codacy-coverage-reporter-assembly.jar report -l Kotlin -r build/reports/jacoco/test/jacocoTestReport.xml --commit-uuid $GIT_COMMIT_SHA
+  quality_gate:
+    runs-on: ubuntu-latest
+    container: openjdk:11.0.1-jdk-slim-stretch
+    needs: jacoco
+    steps:
+      - run: ./gradlew jacocoTestCoverageVerification
   ktlint:
     runs-on: ubuntu-latest
     container: openjdk:11.0.1-jdk-slim-stretch
-    name: Build and test
     steps:
       - uses: actions/checkout@v1
       - name: Configure container
