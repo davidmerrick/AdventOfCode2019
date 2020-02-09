@@ -2,7 +2,6 @@ package com.merricklabs.adventofcode2019.day8
 
 import io.kotlintest.matchers.collections.shouldContainInOrder
 import io.kotlintest.shouldBe
-import io.kotlintest.days
 import org.testng.annotations.Test
 
 class SpaceImageTest {
@@ -32,8 +31,6 @@ class SpaceImageTest {
     fun `Render simple image`() {
         val digits = "0222112222120000"
         val width = 2
-
-
         val height = 2
         val image = SpaceImage(digits, width, height)
         val rendered = image.render()
