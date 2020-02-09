@@ -2,6 +2,7 @@ package com.merricklabs.adventofcode2019.day8
 
 import io.kotlintest.matchers.collections.shouldContainInOrder
 import io.kotlintest.shouldBe
+import io.kotlintest.days
 import org.testng.annotations.Test
 
 class SpaceImageTest {
