@@ -19,7 +19,6 @@ dependencies {
     implementation(Libs.kotlin_logging)
     implementation("com.github.dpaukov:combinatoricslib3:3.3.0")
 
-
     testImplementation(Libs.testng)
     testImplementation(Libs.kotlintest_runner_junit5)
     testImplementation(Libs.mockito_kotlin)
@@ -40,8 +39,8 @@ tasks {
         reports {
             xml.isEnabled = true
             csv.isEnabled = false
-            xml.destination = file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
-            html.destination = file("${buildDir}/jacocoHtml")
+            xml.destination = file("$buildDir/reports/jacoco/test/jacocoTestReport.xml")
+            html.destination = file("$buildDir/jacocoHtml")
         }
     }
 
