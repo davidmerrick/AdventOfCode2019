@@ -3,7 +3,7 @@ name: Linting
 on: [pull_request]
 
 jobs:
-  build_and_test:
+  ktlint:
     runs-on: ubuntu-latest
     container: openjdk:11.0.1-jdk-slim-stretch
     name: Build and test
