@@ -11,20 +11,21 @@ jobs:
       - uses: actions/checkout@v1
       - name: Test
         run: ./gradlew test
-      - name: Persist workspace
+      - name: Persist build
         uses: actions/upload-artifact@master
         with:
-          name: workspace
-          path: ./
+          name: build
+          path: ./build
   jacoco:
     runs-on: ubuntu-latest
     container: openjdk:11.0.1-jdk-slim-stretch
     needs: build_and_test
     steps:
+      - uses: actions/checkout@v1
       - uses: actions/download-artifact@master
         with:
-          name: workspace
-          path: ./
+          name: build
+          path: ./build
       - name: Jacoco reports
         run: ./gradlew testCoverage
       - name: Persist test results
@@ -33,11 +34,11 @@ jobs:
         with:
           name: jacoco
           path: ./build/jacocoHtml
-      - name: Persist workspace
+      - name: Persist build
         uses: actions/upload-artifact@master
         with:
-          name: workspace
-          path: ./
+          name: build
+          path: ./build
   upload_coverage:
     runs-on: ubuntu-latest
     container: openjdk:11.0.1-jdk-slim-stretch
@@ -45,10 +46,11 @@ jobs:
     env:
       CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
     steps:
+      - uses: actions/checkout@v1
       - uses: actions/download-artifact@master
         with:
-          name: workspace
-          path: ./
+          name: build
+          path: ./build
       - name: Set Git branch and SHA for Codacy
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]
@@ -69,10 +71,11 @@ jobs:
     container: openjdk:11.0.1-jdk-slim-stretch
     needs: jacoco
     steps:
+      - uses: actions/checkout@v1
       - uses: actions/download-artifact@master
         with:
-          name: workspace
-          path: ./
+          name: build
+          path: ./build
       - run: ./gradlew jacocoTestCoverageVerification
   ktlint:
     runs-on: ubuntu-latest
