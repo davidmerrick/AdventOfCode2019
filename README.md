@@ -16,6 +16,10 @@ One gotcha I found is that the language needs to be specified for code coverage 
 
 Configuring [engines](https://support.codacy.com/hc/en-us/articles/213632009-Engines).
 
+# Todo
+
+Check out this library: https://github.com/arrow-kt/arrow
+
 # Helpful resources
 
   - [IntCode Disassembler](https://janiczek.github.io/advent-of-code/Year2019/Intcode/Disasm/)
