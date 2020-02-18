@@ -80,20 +80,5 @@ jobs:
     container: openjdk:11.0.1-jdk-slim-stretch
     steps:
       - uses: actions/checkout@v1
-      - name: Configure container
-        run: |
-          apt-get update && apt-get -y install curl
-      - name: Install ktlint
-        run: |
-          curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.35.0/ktlint
-          chmod a+x ktlint
-          mv ktlint /bin
-      - name: Install reviewdog
-        run: |
-          curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s
-      - name: Run reviewdog
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          ktlint --reporter=checkstyle | ./bin/reviewdog -f=checkstyle -name="ktlint" --reporter=github-pr-check
+      - uses: ./.github/actions/ktlint
 
