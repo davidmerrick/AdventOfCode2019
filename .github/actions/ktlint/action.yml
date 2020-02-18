@@ -3,7 +3,6 @@ description: 'Runs ktlint and adds comments with ReviewDog'
 inputs:
   githubToken:
     description: 'GitHub token'
-    default: ${{ secrets.GITHUB_TOKEN }}
     required: true
 runs:
   using: 'docker'
