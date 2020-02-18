@@ -1,7 +1,7 @@
 FROM openjdk:11.0.1-jdk-slim-stretch
 
 RUN apt-get update \
-    && apt-get --no-install-recommends -y install curl
+    && apt-get --no-install-recommends -y install curl="7.52.1-5+deb9u9" \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
