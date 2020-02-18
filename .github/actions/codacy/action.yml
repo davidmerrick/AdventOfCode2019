@@ -1,0 +1,20 @@
+name: 'Codacy Upload'
+description: 'Uploads test coverage reports to Codacy'
+inputs:
+  reportPath:
+    description: 'Path to Jacoco XML report'
+    default: 'build/reports/jacoco/test/jacocoTestReport.xml'
+    required: true
+  codacyToken:
+    description: 'Token to auth to Codacy with'
+    required: true
+  commitId:
+    description: 'Commit to upload coverage for'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.codacyToken }}
+    - ${{ inputs.reportPath }}
+    - ${{ inputs.commitId }}
