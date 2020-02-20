@@ -14,7 +14,8 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - ${{ inputs.codacyToken }}
-    - ${{ inputs.reportPath }}
-    - ${{ inputs.commitId }}
+  env:
+    CODACY_PROJECT_TOKEN: ${{ inputs.codacyToken }}
+    REPORT_PATH: ${{ inputs.reportPath }}
+    COMMIT_ID: ${{ inputs.commitId }}
+
