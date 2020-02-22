@@ -43,8 +43,6 @@ jobs:
     runs-on: ubuntu-latest
     container: openjdk:11.0.1-jdk-slim-stretch
     needs: jacoco
-    env:
-      CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
     steps:
       - uses: actions/checkout@v1
       - uses: actions/download-artifact@master
@@ -61,11 +59,11 @@ jobs:
             echo ::set-env name=GIT_BRANCH::$(echo $GITHUB_REF | cut -c12-)
             echo ::set-env name=GIT_COMMIT_SHA::$GITHUB_SHA
           fi
-      - name: Upload test results to Codacy
-        run: |
-          apt-get update && apt-get install -y curl jq
-          curl -LS -o codacy-coverage-reporter-assembly.jar "$(curl -LSs https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | endswith(".jar"))) | .[0].browser_download_url')"
-          java -jar codacy-coverage-reporter-assembly.jar report -l Kotlin -r build/reports/jacoco/test/jacocoTestReport.xml --commit-uuid $GIT_COMMIT_SHA
+      - uses: ./.github/actions/codacy
+        with:
+          reportPath: build/reports/jacoco/test/jacocoTestReport.xml
+          codacyToken: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          commitId: $GIT_COMMIT_SHA
   quality_gate:
     runs-on: ubuntu-latest
     container: openjdk:11.0.1-jdk-slim-stretch
@@ -82,20 +80,7 @@ jobs:
     container: openjdk:11.0.1-jdk-slim-stretch
     steps:
       - uses: actions/checkout@v1
-      - name: Configure container
-        run: |
-          apt-get update && apt-get -y install curl
-      - name: Install ktlint
-        run: |
-          curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.35.0/ktlint
-          chmod a+x ktlint
-          mv ktlint /bin
-      - name: Install reviewdog
-        run: |
-          curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s
-      - name: Run reviewdog
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          ktlint --reporter=checkstyle | ./bin/reviewdog -f=checkstyle -name="ktlint" --reporter=github-pr-check
+      - uses: VEVO/action-ktlint@v1
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
 
