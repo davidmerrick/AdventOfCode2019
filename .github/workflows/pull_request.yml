@@ -80,7 +80,7 @@ jobs:
     container: openjdk:11.0.1-jdk-slim-stretch
     steps:
       - uses: actions/checkout@v1
-      - uses: VEVO/action-ktlint
+      - uses: VEVO/action-ktlint@v1
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
