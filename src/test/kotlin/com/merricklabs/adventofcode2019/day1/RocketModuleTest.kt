@@ -34,7 +34,6 @@ object RocketModuleTest {
         val result = this::class.java.getResourceAsStream("input.txt")
             .bufferedReader()
             .readLines()
-            .asSequence()
             .map { RocketModule(it.toInt()).getFuel() }
             .sum()
         result shouldBe 3464735
