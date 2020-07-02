@@ -1,4 +1,4 @@
-group = "com.merricklabs.adventofcode2019"
+group = "io.github.davidmerrick.adventofcode2019"
 
 repositories {
     mavenCentral()
